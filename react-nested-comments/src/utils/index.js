@@ -35,6 +35,58 @@ export const addReplyUtil = (comments, id, comment) => {
   });
 };
 
+export const editCommentUtil = (comments, id, comment) => {
+  return produce(comments, (draft) => {
+    const dfs = (comm) => {
+      if (comm.id === id) {
+        comm.comment = comment;
+        return true;
+      }
+      for (let i = 0; i < comm.subComments.length; i++) {
+        if (dfs(comm.subComments[i])) return;
+      }
+      return false;
+    };
+
+    for (let i = 0; i < draft.length; i++) {
+      if (dfs(draft[i])) {
+        break;
+      }
+    }
+  });
+};
+
+export const deleteCommentUtil = (comments, id) => {
+  return produce(comments, (draft) => {
+    const dfs = (comm, parentComment) => {
+      if (comm.id === id) {
+        console.log(comm, parentComment);
+        if (parentComment === null) {
+          const ind = draft.findIndex((c) => c.id === id);
+          if (ind !== -1) {
+            draft.splice(ind, 1);
+          }
+        } else {
+          parentComment.subComments = parentComment.subComments.filter(
+            (c) => c.id !== id
+          );
+        }
+        return true;
+      }
+      for (let i = 0; i < comm.subComments.length; i++) {
+        if (dfs(comm.subComments[i], comm)) return;
+      }
+      return false;
+    };
+
+    for (let i = 0; i < draft.length; i++) {
+      if (dfs(draft[i], null)) {
+        break;
+      }
+    }
+  });
+};
+
 // export const addReplyUtil = (comments, id, comment) => {
 //   const dfs = (parentComment) => {
 //     if (parentComment.id === id) {

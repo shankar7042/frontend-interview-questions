@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Comment from "./components/Comment";
 import data from "./data/comments";
-import { addReplyUtil } from "./utils";
+import { addReplyUtil, deleteCommentUtil, editCommentUtil } from "./utils";
 
 function App() {
   const [comments, setComments] = useState(data);
@@ -9,6 +9,14 @@ function App() {
 
   const addReply = (id, comment) => {
     setComments(addReplyUtil(comments, id, comment));
+  };
+
+  const editComment = (id, comment) => {
+    setComments(editCommentUtil(comments, id, comment));
+  };
+
+  const deleteComment = (id) => {
+    setComments(deleteCommentUtil(comments, id));
   };
 
   const handleSubmit = (e) => {
@@ -37,7 +45,13 @@ function App() {
       {comments.length > 0 &&
         comments.map((comment) => {
           return (
-            <Comment key={comment.id} comment={comment} reply={addReply} />
+            <Comment
+              key={comment.id}
+              comment={comment}
+              reply={addReply}
+              editComment={editComment}
+              deleteComment={deleteComment}
+            />
           );
         })}
     </div>
