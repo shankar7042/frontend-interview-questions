@@ -1,0 +1,9 @@
+.container {
+  width: 60%;
+  margin: 1rem auto;
+}
+
+.btn-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
